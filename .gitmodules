@@ -1,0 +1,3 @@
+[submodule "lib/HT1632"]
+	path = lib/HT1632
+	url = https://github.com/adafruit/HT1632.git
