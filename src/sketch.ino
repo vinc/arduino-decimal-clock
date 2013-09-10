@@ -32,8 +32,8 @@ void draw(char c, int offset) {
     if (screen[offset] != c) {
         screen[offset] = c;
 
-        for (int x = 0; x < FONT_WIDTH; ++x) {
-            for (int y = 0; y < FONT_HEIGHT; ++y) {
+        for (int x = 0; x < FONT_WIDTH; x++) {
+            for (int y = 0; y < FONT_HEIGHT; y++) {
                 int i = FONT_CHAR(c) + FONT_WIDTH * y + x;
                 int pixel = (FONT[i] == '#');
                 matrix.drawPixel(offset * FONT_WIDTH + x, y, pixel);
