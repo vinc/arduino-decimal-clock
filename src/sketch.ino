@@ -18,22 +18,28 @@
 
 //#define SERIAL 1
 #define MATRIX 1
+
 #ifdef MATRIX
 #include "HT1632.h"
 #endif
 
-#define DATA 2
-#define WR   3
-#define CS   4
-#define CS2  5
-#define CS3  6
+#define DATA   2 // Digital pin
+#define WR     3 // Digital pin
+#define CS     4 // Digital pin
+#define CS2    5 // Digital pin
+#define CS3    6 // Digital pin
+
+#define COUNT(array) sizeof(array) / sizeof(array[0])
+
+#define BEAT 864000L // 1 beat == 0.864 seconds
 
 #ifdef MATRIX
 HT1632LEDMatrix matrix = HT1632LEDMatrix(DATA, WR, CS, CS2, CS3);
 #endif
 
-unsigned long centidays = 0L;
 char screen[] = "******";
+unsigned long centidays = 0L;
+unsigned long time = micros();
 
 void draw(char c, int offset) {
     if (screen[offset] != c) {
@@ -76,18 +82,20 @@ void write()
 
 void loop()
 {
-    char c;
-    int t = centidays = (centidays < 99999 ? centidays + 1 : 0);
-    int i = 6;
-    while (i --> 0) {
-        if (i == 2) {
-            c = '.';
-        } else {
-            c = '0' + (t % 10);
-            t = t / 10;
+    if (micros() - time > BEAT) { // FIXME: Overflow?
+        time += BEAT; // FIXME: Overflow?
+        unsigned long t = centidays = (centidays < 99999 ? centidays + 1 : 0);
+        int i = COUNT(screen) - 1;
+        while (i --> 0) {
+            char c;
+            if (i == 2) {
+                c = '.';
+            } else {
+                c = '0' + (t % 10);
+                t = t / 10;
+            }
+            draw(c, i);
         }
-        draw(c, i);
+        write();
     }
-    write();
-    delay(864);
 }
