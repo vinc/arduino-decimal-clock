@@ -15,7 +15,12 @@
  */
 
 #include "font.h"
+
+//#define SERIAL 1
+#define MATRIX 1
+#ifdef MATRIX
 #include "HT1632.h"
+#endif
 
 #define DATA 2
 #define WR   3
@@ -23,7 +28,9 @@
 #define CS2  5
 #define CS3  6
 
+#ifdef MATRIX
 HT1632LEDMatrix matrix = HT1632LEDMatrix(DATA, WR, CS, CS2, CS3);
+#endif
 
 unsigned long centidays = 0L;
 char screen[] = "******";
@@ -36,7 +43,9 @@ void draw(char c, int offset) {
             for (int y = 0; y < FONT_HEIGHT; y++) {
                 int i = FONT_CHAR(c) + FONT_WIDTH * y + x;
                 int pixel = (FONT[i] == '#');
+#ifdef MATRIX
                 matrix.drawPixel(offset * FONT_WIDTH + x, y, pixel);
+#endif
             }
         }
     }
@@ -44,8 +53,25 @@ void draw(char c, int offset) {
 
 void setup()
 {
+#ifdef SERIAL
+    Serial.begin(9600);
+#endif
+
+#ifdef MATRIX
     matrix.begin(HT1632_COMMON_16NMOS);
     matrix.clearScreen();
+#endif
+}
+
+void write()
+{
+#ifdef SERIAL
+    Serial.println(screen);
+#endif
+
+#ifdef MATRIX
+    matrix.writeScreen();
+#endif
 }
 
 void loop()
@@ -62,6 +88,6 @@ void loop()
         }
         draw(c, i);
     }
-    matrix.writeScreen();
+    write();
     delay(864);
 }
