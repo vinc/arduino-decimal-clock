@@ -66,6 +66,7 @@ void setup()
 #ifdef MATRIX
     matrix.begin(HT1632_COMMON_16NMOS);
     matrix.clearScreen();
+    matrix.setBrightness(0);
 #endif
 
     pinMode(LED, OUTPUT);
