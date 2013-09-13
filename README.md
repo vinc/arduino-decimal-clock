@@ -14,6 +14,7 @@ Installation
 
     $ git clone --recursive git://github.com/vinc/arduino-decimal-clock.git
     $ cd arduino-decimal-clock
+    $ ruby src/font.rb
     $ ino build
     $ ino upload
 

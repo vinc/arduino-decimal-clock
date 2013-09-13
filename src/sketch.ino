@@ -47,8 +47,7 @@ void draw(char c, int offset) {
 
         for (int x = 0; x < FONT_WIDTH; x++) {
             for (int y = 0; y < FONT_HEIGHT; y++) {
-                int i = FONT_CHAR(c) + FONT_WIDTH * y + x;
-                int pixel = (FONT[i] == '#');
+                int pixel = FONT_PIXEL(c, x, y);
 #ifdef MATRIX
                 matrix.drawPixel(offset * FONT_WIDTH + x, y, pixel);
 #endif
