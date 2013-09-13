@@ -28,6 +28,7 @@
 #define CS     4 // Digital pin
 #define CS2    5 // Digital pin
 #define CS3    6 // Digital pin
+#define LED   13 // Digital pin
 
 #define COUNT(array) sizeof(array) / sizeof(array[0])
 
@@ -66,6 +67,8 @@ void setup()
     matrix.begin(HT1632_COMMON_16NMOS);
     matrix.clearScreen();
 #endif
+
+    pinMode(LED, OUTPUT);
 }
 
 void write()
@@ -82,6 +85,7 @@ void write()
 void loop()
 {
     if (micros() - time > BEAT) { // FIXME: Overflow?
+        digitalWrite(LED, HIGH);
         time += BEAT; // FIXME: Overflow?
         unsigned long t = centidays = (centidays < 99999 ? centidays + 1 : 0);
         int i = COUNT(screen) - 1;
@@ -96,5 +100,6 @@ void loop()
             draw(c, i);
         }
         write();
+        digitalWrite(LED, LOW);
     }
 }
