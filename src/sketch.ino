@@ -20,7 +20,7 @@
 #define MATRIX 1
 
 #ifdef MATRIX
-#include "HT1632.h"
+#include "Adafruit_HT1632.h"
 #endif
 
 #define DATA   2 // Digital pin
@@ -35,7 +35,7 @@
 #define BEAT 864000L // 1 beat == 0.864 seconds
 
 #ifdef MATRIX
-HT1632LEDMatrix matrix = HT1632LEDMatrix(DATA, WR, CS, CS2, CS3);
+Adafruit_HT1632LEDMatrix matrix = Adafruit_HT1632LEDMatrix(DATA, WR, CS, CS2, CS3);
 #endif
 
 char screen[] = "******";
@@ -64,7 +64,7 @@ void setup()
 #endif
 
 #ifdef MATRIX
-    matrix.begin(HT1632_COMMON_16NMOS);
+    matrix.begin(ADA_HT1632_COMMON_16NMOS);
     matrix.clearScreen();
     matrix.setBrightness(0);
 #endif
