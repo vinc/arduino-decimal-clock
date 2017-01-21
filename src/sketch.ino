@@ -28,6 +28,8 @@
 #define CS     4 // Digital pin
 #define CS2    5 // Digital pin
 #define CS3    6 // Digital pin
+#define S1     8 // Digital pin
+#define S2     9 // Digital pin
 #define LED   13 // Digital pin
 
 #define COUNT(array) sizeof(array) / sizeof(array[0])
@@ -70,6 +72,10 @@ void setup()
 #endif
 
     pinMode(LED, OUTPUT);
+    pinMode(S1, INPUT);
+    pinMode(S2, INPUT);
+    digitalWrite(S1, HIGH); // Turn on pullup resistors
+    digitalWrite(S2, HIGH); // Turn on pullup resistors
 }
 
 void write()
@@ -86,9 +92,17 @@ void write()
 void loop()
 {
     if (micros() - time > BEAT) { // FIXME: Overflow?
-        digitalWrite(LED, HIGH);
         time += BEAT; // FIXME: Overflow?
-        unsigned long t = centidays = (centidays < 99999 ? centidays + 1 : 0);
+
+        digitalWrite(LED, HIGH);
+
+        int s1 = digitalRead(S1); // Add 1 milliday for switch #1
+        int s2 = digitalRead(S2); // Add 1 centiday for switch #2
+        int tick = 1 + (s1 == LOW ? 100 : 0) + (s2 == LOW ? 1000 : 0);
+
+        centidays = (centidays + tick) % 100000;
+
+        unsigned long t = centidays;
         int i = COUNT(screen) - 1;
         while (i --> 0) {
             char c;
@@ -101,6 +115,7 @@ void loop()
             draw(c, i);
         }
         write();
+
         digitalWrite(LED, LOW);
     }
 }
